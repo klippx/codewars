@@ -11,5 +11,6 @@ defmodule EgyptfractTest do
     testing(2, "12/4", ["3"])
     testing(3, "4/5", ["1/2", "1/4", "1/20"])
     testing(4, "0.66", ["1/2", "1/7", "1/59", "1/5163", "1/53307975"])
+    testing(5, "0", [])
   end
 end

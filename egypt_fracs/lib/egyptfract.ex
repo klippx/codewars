@@ -1,5 +1,12 @@
 defmodule Egyptfract do
   def decompose(n) do
+    cond do
+      n == "0" -> []
+      true -> split(n)
+    end
+  end
+
+  defp split(n) do
     {s, t} = parse(n)
       |> to_integer
       |> simplify
@@ -8,7 +15,7 @@ defmodule Egyptfract do
     case t do
       :gt_one -> [stringify(s)]
       {1, _}  -> [stringify(s)] ++ [stringify(t)]
-      _       -> [stringify(s)] ++ decompose(stringify(t))
+      _       -> [stringify(s)] ++ split(stringify(t))
     end
   end
 
@@ -41,7 +48,7 @@ defmodule Egyptfract do
     {int_x, int_y}
   end
 
-  def egyptify({x, y}) do
+  defp egyptify({x, y}) do
     cond do
       x > y -> { { x, y }, :gt_one }
       true ->
@@ -52,14 +59,14 @@ defmodule Egyptfract do
     end
   end
 
-  def mod(left, right) do
+  defp mod(left, right) do
     cond do
       left * right >= 0 -> :erlang.rem(left, right)
       true -> right + :erlang.rem(left, right)
     end
   end
 
-  def simplify({x, y}) do
+  defp simplify({x, y}) do
     cond do
       mod(x, y) == 0 -> {div(x,y), 1}
       div(y, x) == y/x -> {1, div(y, x)}
@@ -67,11 +74,11 @@ defmodule Egyptfract do
     end
   end
 
-  def numerator(n) do
+  defp numerator(n) do
     String.replace(n, ~r/0\.|\./, "")
   end
 
-  def denomenator(n) do
+  defp denomenator(n) do
     Enum.map(0..(String.length(n)-2),
       fn x
         when x == 0 -> "1"
