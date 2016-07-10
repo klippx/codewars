@@ -6,29 +6,36 @@ defmodule Egyptfract do
       |> egyptify
 
     case t do
-      1 -> [stringify(s)]
-      {1, _} -> [stringify(s)] ++ [stringify(t)]
-      _ -> [stringify(s)] ++ decompose(stringify(t))
+      :gt_one -> [stringify(s)]
+      {1, _}  -> [stringify(s)] ++ [stringify(t)]
+      _       -> [stringify(s)] ++ decompose(stringify(t))
     end
   end
 
-  def stringify({x,y}) do
-    "#{x}/#{y}"
+  defp stringify({x,y}) do
+    case y do
+      1 -> "#{x}"
+      _ -> "#{x}/#{y}"
+    end
   end
 
-  def stringify(x) do
-    "#{x}"
-  end
-
-  def parse(n) do
+  defp parse(n) do
     cond do
-      Regex.match?(~r/\./, n) -> [get_numerator(n), get_denomenator(n)]
-      Regex.match?(~r/\//, n) -> String.split(n, "/")
+      Regex.match?(~r/\./, n) -> parse_float(n)
+      Regex.match?(~r/\//, n) -> parse_frac(n)
       true -> n
     end
   end
 
-  def to_integer([x, y]) do
+  defp parse_float(n) do
+    [numerator(n), denomenator(n)]
+  end
+
+  defp parse_frac(n) do
+    String.split(n, "/")
+  end
+
+  defp to_integer([x, y]) do
     {int_x, _} = Integer.parse(x)
     {int_y, _} = Integer.parse(y)
     {int_x, int_y}
@@ -36,8 +43,7 @@ defmodule Egyptfract do
 
   def egyptify({x, y}) do
     cond do
-      x > y && mod(x,y) == 0 ->
-        { div(x,y), 1 }
+      x > y -> { { x, y }, :gt_one }
       true ->
         {
           { 1, (round Float.ceil(y/x)) },
@@ -61,16 +67,16 @@ defmodule Egyptfract do
     end
   end
 
-  def get_numerator(n) do
+  def numerator(n) do
     String.replace(n, ~r/0\.|\./, "")
   end
 
-  def get_denomenator(n) do
+  def denomenator(n) do
     Enum.map(0..(String.length(n)-2),
       fn x
         when x == 0 -> "1"
         _ -> "0"
-      end)
-      |> Enum.join
+      end
+    ) |> Enum.join
   end
 end
