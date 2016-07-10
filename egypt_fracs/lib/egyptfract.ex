@@ -1,9 +1,23 @@
 defmodule Egyptfract do
   def decompose(n) do
-    parse(n)
+    {s, t} = parse(n)
       |> to_integer
       |> simplify
       |> egyptify
+
+    case t do
+      1 -> [stringify(s)]
+      {1, _} -> [stringify(s)] ++ [stringify(t)]
+      _ -> [stringify(s)] ++ decompose(stringify(t))
+    end
+  end
+
+  def stringify({x,y}) do
+    "#{x}/#{y}"
+  end
+
+  def stringify(x) do
+    "#{x}"
   end
 
   def parse(n) do
@@ -21,10 +35,15 @@ defmodule Egyptfract do
   end
 
   def egyptify({x, y}) do
-    {
-      { 1, (round Float.ceil(y/x)) },
-      { mod(-y,x), round (y*Float.ceil(y/x)) }
-    }
+    cond do
+      x > y && mod(x,y) == 0 ->
+        { div(x,y), 1 }
+      true ->
+        {
+          { 1, (round Float.ceil(y/x)) },
+          { mod(-y,x), round (y*Float.ceil(y/x)) } |> simplify
+        }
+    end
   end
 
   def mod(left, right) do
@@ -36,6 +55,7 @@ defmodule Egyptfract do
 
   def simplify({x, y}) do
     cond do
+      mod(x, y) == 0 -> {div(x,y), 1}
       div(y, x) == y/x -> {1, div(y, x)}
       true -> {x, y}
     end

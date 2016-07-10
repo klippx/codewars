@@ -2,7 +2,7 @@ defmodule EgyptfractTest do
   use ExUnit.Case
 
   defp testing(numtest,s, ans) do
-    IO.puts("Test #{numtest} \n")
+    IO.puts("Test #{numtest}")
     assert Egyptfract.decompose(s) == ans
   end
 
