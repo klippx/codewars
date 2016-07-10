@@ -6,27 +6,35 @@ defmodule Egyptfract do
     end
   end
 
-  defp split(n) do
+  def split(n) do
     {s, t} = parse(n)
       |> to_integer
       |> simplify
       |> egyptify
 
     case t do
-      :gt_one -> [stringify(s)]
+      :gt_one ->
+        {a, b} = s
+        cond do
+          div(a,b) == a/b -> [stringify(s)]
+          true ->
+            s = {div(a,b), 1}
+            t = {a-b*div(a,b), b} |> simplify
+            [stringify(s)] ++ [stringify(t)]
+        end
       {1, _}  -> [stringify(s)] ++ [stringify(t)]
       _       -> [stringify(s)] ++ split(stringify(t))
     end
   end
 
-  defp stringify({x,y}) do
+  def stringify({x,y}) do
     case y do
       1 -> "#{x}"
       _ -> "#{x}/#{y}"
     end
   end
 
-  defp parse(n) do
+  def parse(n) do
     cond do
       Regex.match?(~r/\./, n) -> parse_float(n)
       Regex.match?(~r/\//, n) -> parse_frac(n)
@@ -34,21 +42,21 @@ defmodule Egyptfract do
     end
   end
 
-  defp parse_float(n) do
+  def parse_float(n) do
     [numerator(n), denomenator(n)]
   end
 
-  defp parse_frac(n) do
+  def parse_frac(n) do
     String.split(n, "/")
   end
 
-  defp to_integer([x, y]) do
+  def to_integer([x, y]) do
     {int_x, _} = Integer.parse(x)
     {int_y, _} = Integer.parse(y)
     {int_x, int_y}
   end
 
-  defp egyptify({x, y}) do
+  def egyptify({x, y}) do
     cond do
       x > y -> { { x, y }, :gt_one }
       true ->
@@ -59,14 +67,14 @@ defmodule Egyptfract do
     end
   end
 
-  defp mod(left, right) do
+  def mod(left, right) do
     cond do
       left * right >= 0 -> :erlang.rem(left, right)
       true -> right + :erlang.rem(left, right)
     end
   end
 
-  defp simplify({x, y}) do
+  def simplify({x, y}) do
     cond do
       mod(x, y) == 0 -> {div(x,y), 1}
       div(y, x) == y/x -> {1, div(y, x)}
@@ -74,11 +82,11 @@ defmodule Egyptfract do
     end
   end
 
-  defp numerator(n) do
+  def numerator(n) do
     String.replace(n, ~r/0\.|\./, "")
   end
 
-  defp denomenator(n) do
+  def denomenator(n) do
     Enum.map(0..(String.length(n)-2),
       fn x
         when x == 0 -> "1"
