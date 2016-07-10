@@ -22,6 +22,7 @@ defmodule Egyptfract do
             t = {a-b*div(a,b), b} |> simplify
             [stringify(s)] ++ [stringify(t)]
         end
+      :eq_one -> [stringify(s)]
       {1, _}  -> [stringify(s)] ++ [stringify(t)]
       _       -> [stringify(s)] ++ split(stringify(t))
     end
@@ -58,8 +59,9 @@ defmodule Egyptfract do
 
   def egyptify({x, y}) do
     cond do
-      x > y -> { { x, y }, :gt_one }
-      true ->
+      x > y  -> { { x, y }, :gt_one }
+      x == 1 -> { { x, y }, :eq_one }
+      true   ->
         {
           { 1, (round Float.ceil(y/x)) },
           { mod(-y,x), round (y*Float.ceil(y/x)) } |> simplify
