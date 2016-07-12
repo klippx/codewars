@@ -97,11 +97,6 @@ defmodule Egyptfract do
   end
 
   def denomenator(n) do
-    Enum.map(0..(String.length(n)-2),
-      fn x
-        when x == 0 -> "1"
-        _ -> "0"
-      end
-    ) |> Enum.join
+    [1] ++ List.duplicate(0, String.length(n)-2) |> Enum.join
   end
 end
