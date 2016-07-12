@@ -14,19 +14,20 @@ defmodule Egyptfract do
       |> diversify
   end
 
-  def diversify({s, t}) do
-    case t do
-      :eq_one -> [stringify(s)]
-      :zero -> []
-      :gt_one ->
-        case s do
-          {a, b} when div(a,b) == a/b -> [stringify(s)]
-          _ ->
-            {ds, dt} = split_positive_numerator(s)
-            [stringify(ds)] ++ process(stringify(dt))
-        end
-      _ -> [stringify(s)] ++ process(stringify(t))
+  def diversify(s) when is_tuple(s) do
+    case s do
+      {a, _} when a == 0 -> []
+      {a, _} when a == 1 -> [stringify(s)]
+      {a, b} when div(a,b) == a/b -> [stringify(s)]
+      _ ->
+        {ds, dt} = split_positive_numerator(s)
+        [stringify(ds)] ++ process(stringify(dt))
     end
+  end
+
+  def diversify(arg) when is_list(arg) do
+    [s, t] = arg
+    [stringify(s)] ++ process(stringify(t))
   end
 
   def split_positive_numerator({s, t}) do
@@ -67,14 +68,14 @@ defmodule Egyptfract do
 
   def egyptify({x, y}) do
     cond do
-      x == 0 -> { { x, y }, :zero }
-      x == 1 -> { { x, y }, :eq_one }
-      x > y  -> { { x, y }, :gt_one }
+      x == 0 -> { x, y }
+      x == 1 -> { x, y }
+      x > y  -> { x, y }
       true   ->
-        {
+        [
           { 1, (round Float.ceil(y/x)) },
           { mod(-y,x), round (y*Float.ceil(y/x)) } |> simplify
-        }
+        ]
     end
   end
 
