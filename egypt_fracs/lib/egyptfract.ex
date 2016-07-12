@@ -22,7 +22,7 @@ defmodule Egyptfract do
           true ->
             s = {div(a,b), 1}
             t = {a-b*div(a,b), b} |> simplify
-            [stringify(s)] ++ [stringify(t)]
+            [stringify(s)] ++ split(stringify(t))
         end
       {1, _}  -> [stringify(s)] ++ [stringify(t)]
       _       -> [stringify(s)] ++ split(stringify(t))
