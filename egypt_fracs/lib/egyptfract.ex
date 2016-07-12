@@ -2,31 +2,38 @@ defmodule Egyptfract do
   def decompose(n) do
     cond do
       n == "0" -> []
-      true -> split(n)
+      true -> process(n)
     end
   end
 
-  def split(n) do
-    {s, t} = parse(n)
+  def process(n) do
+    parse(n)
       |> to_integer
       |> simplify
       |> egyptify
+      |> diversify
+  end
 
+  def diversify({s, t}) do
     case t do
       :eq_one -> [stringify(s)]
       :zero -> []
       :gt_one ->
-        {a, b} = s
-        cond do
-          div(a,b) == a/b -> [stringify(s)]
-          true ->
-            s = {div(a,b), 1}
-            t = {a-b*div(a,b), b} |> simplify
-            [stringify(s)] ++ split(stringify(t))
+        case s do
+          {a, b} when div(a,b) == a/b -> [stringify(s)]
+          _ ->
+            {ds, dt} = split_positive_numerator(s)
+            [stringify(ds)] ++ process(stringify(dt))
         end
-      {1, _}  -> [stringify(s)] ++ [stringify(t)]
-      _       -> [stringify(s)] ++ split(stringify(t))
+      _ -> [stringify(s)] ++ process(stringify(t))
     end
+  end
+
+  def split_positive_numerator({s, t}) do
+    {
+      {div(s,t), 1},
+      {s-t*div(s,t), t} |> simplify
+    }
   end
 
   def stringify({x,y}) do
