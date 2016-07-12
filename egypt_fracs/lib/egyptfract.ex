@@ -10,11 +10,11 @@ defmodule Egyptfract do
     parse(n)
       |> to_integer
       |> simplify
-      |> egyptify
-      |> diversify
+      |> apply_egyptian_algorithm
+      |> parse_result
   end
 
-  def egyptify({x, y}) do
+  def apply_egyptian_algorithm({x, y}) do
     cond do
       !Enum.member?(0..1, x) and x <= y ->
         [
@@ -25,7 +25,7 @@ defmodule Egyptfract do
     end
   end
 
-  def diversify(arg) when is_tuple(arg) do
+  def parse_result(arg) when is_tuple(arg) do
     case arg do
       {a, _} when a == 0 -> []
       {a, _} when a == 1 -> [stringify(arg)]
@@ -36,7 +36,7 @@ defmodule Egyptfract do
     end
   end
 
-  def diversify(arg) when is_list(arg) do
+  def parse_result(arg) when is_list(arg) do
     [s, t] = arg
     [stringify(s)] ++ process(stringify(t))
   end
