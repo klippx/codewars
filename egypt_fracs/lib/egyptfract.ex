@@ -14,13 +14,24 @@ defmodule Egyptfract do
       |> diversify
   end
 
-  def diversify(s) when is_tuple(s) do
-    case s do
+  def egyptify({x, y}) do
+    cond do
+      !Enum.member?(0..1, x) and x <= y ->
+        [
+          { 1, (round Float.ceil(y/x)) },
+          { mod(-y,x), round (y*Float.ceil(y/x)) } |> simplify
+        ]
+      true -> { x, y }
+    end
+  end
+
+  def diversify(arg) when is_tuple(arg) do
+    case arg do
       {a, _} when a == 0 -> []
-      {a, _} when a == 1 -> [stringify(s)]
-      {a, b} when div(a,b) == a/b -> [stringify(s)]
+      {a, _} when a == 1 -> [stringify(arg)]
+      {a, b} when div(a,b) == a/b -> [stringify(arg)]
       _ ->
-        {ds, dt} = split_positive_numerator(s)
+        {ds, dt} = split_positive_numerator(arg)
         [stringify(ds)] ++ process(stringify(dt))
     end
   end
@@ -64,19 +75,6 @@ defmodule Egyptfract do
     {int_x, _} = Integer.parse(x)
     {int_y, _} = Integer.parse(y)
     {int_x, int_y}
-  end
-
-  def egyptify({x, y}) do
-    cond do
-      x == 0 -> { x, y }
-      x == 1 -> { x, y }
-      x > y  -> { x, y }
-      true   ->
-        [
-          { 1, (round Float.ceil(y/x)) },
-          { mod(-y,x), round (y*Float.ceil(y/x)) } |> simplify
-        ]
-    end
   end
 
   def mod(left, right) do
