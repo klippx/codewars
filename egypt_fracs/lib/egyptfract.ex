@@ -18,11 +18,15 @@ defmodule Egyptfract do
     cond do
       !Enum.member?(0..1, x) and x <= y ->
         [
-          {         1, round   Float.ceil(y/x)  },
-          { mod(-y,x), round y*Float.ceil(y/x) } |> simplify
+          {         1,   div_ceil(y,x) },
+          { mod(-y,x), y*div_ceil(y,x) } |> simplify
         ]
       true -> { x, y }
     end
+  end
+
+  defp div_ceil(a,b) do
+    div(a,b) + 1
   end
 
   def parse_result(arg) do
@@ -74,6 +78,8 @@ defmodule Egyptfract do
 
   def simplify({x, y}) do
     cond do
+      mod(x,2) == 0 and mod(y,2) == 0 -> simplify({div(x,2), div(y,2)})
+      mod(x,5) == 0 and mod(y,5) == 0 -> simplify({div(x,5), div(y,5)})
       mod(x,y) == 0   -> { div(x,y), 1 }
       div(y,x) == y/x -> { 1, div(y,x) }
       true -> {x, y}
