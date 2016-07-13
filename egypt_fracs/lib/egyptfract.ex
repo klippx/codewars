@@ -18,17 +18,18 @@ defmodule Egyptfract do
     cond do
       !Enum.member?(0..1, x) and x <= y ->
         [
-          { 1, (round Float.ceil(y/x)) },
-          { mod(-y,x), round (y*Float.ceil(y/x)) } |> simplify
+          {         1, round   Float.ceil(y/x)  },
+          { mod(-y,x), round y*Float.ceil(y/x) } |> simplify
         ]
       true -> { x, y }
     end
   end
 
-  def parse_result(arg) when is_tuple(arg) do
+  def parse_result(arg) do
     case arg do
-      {a, _} when a == 0 -> []
-      {a, _} when a == 1 -> [stringify(arg)]
+      [s, t] when is_list(arg)    -> [stringify(s)] ++ process(stringify(t))
+      {a, _} when a == 0          -> []
+      {a, _} when a == 1          -> [stringify(arg)]
       {a, b} when div(a,b) == a/b -> [stringify(arg)]
       _ ->
         {ds, dt} = split_positive_numerator(arg)
@@ -36,15 +37,10 @@ defmodule Egyptfract do
     end
   end
 
-  def parse_result(arg) when is_list(arg) do
-    [s, t] = arg
-    [stringify(s)] ++ process(stringify(t))
-  end
-
   def split_positive_numerator({s, t}) do
     {
-      {div(s,t), 1},
-      {s-t*div(s,t), t} |> simplify
+      {       div(s,t), 1 },
+      { s - t*div(s,t), t } |> simplify
     }
   end
 
@@ -57,18 +53,10 @@ defmodule Egyptfract do
 
   def parse(n) do
     cond do
-      Regex.match?(~r/\./, n) -> parse_float(n)
-      Regex.match?(~r/\//, n) -> parse_frac(n)
+      Regex.match?(~r/\./, n) -> [numerator(n), denomenator(n)]
+      Regex.match?(~r/\//, n) -> String.split(n, "/")
       true -> n
     end
-  end
-
-  def parse_float(n) do
-    [numerator(n), denomenator(n)]
-  end
-
-  def parse_frac(n) do
-    String.split(n, "/")
   end
 
   def to_integer([x, y]) do
@@ -79,15 +67,15 @@ defmodule Egyptfract do
 
   def mod(left, right) do
     cond do
-      left * right >= 0 -> :erlang.rem(left, right)
-      true -> right + :erlang.rem(left, right)
+      left * right >= 0 ->         :erlang.rem(left, right)
+      true              -> right + :erlang.rem(left, right)
     end
   end
 
   def simplify({x, y}) do
     cond do
-      mod(x, y) == 0 -> {div(x,y), 1}
-      div(y, x) == y/x -> {1, div(y, x)}
+      mod(x,y) == 0   -> { div(x,y), 1 }
+      div(y,x) == y/x -> { 1, div(y,x) }
       true -> {x, y}
     end
   end
