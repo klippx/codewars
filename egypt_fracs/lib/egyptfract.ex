@@ -58,7 +58,7 @@ defmodule Egyptfract do
   def parse(n) do
     cond do
       Regex.match?(~r/\./, n) -> [numerator(n), denomenator(n)]
-      Regex.match?(~r/\//, n) -> String.split(n, "/")
+      Regex.match?(~r/\//, n) -> String.split(n, "\/")
       true -> n
     end
   end
