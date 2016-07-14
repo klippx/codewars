@@ -29,6 +29,5 @@ defmodule Longestconsec do
       }
     end)
     |> Enum.to_list()
-    |> Enum.reverse
   end
 end
