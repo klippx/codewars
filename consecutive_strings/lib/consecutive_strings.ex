@@ -11,14 +11,15 @@ defmodule Longestconsec do
 
   defp consecutives(strarr, k) do
     Stream.unfold(length(strarr)-k, fn
-      -1 -> nil
-       n -> {
-        strarr
-        |> Enum.drop(n)
-        |> Enum.take(k),
-        n-1
-      }
+     -1 -> nil
+      n -> { get_consecutive_elems(strarr, n, k), n-1 }
     end)
     |> Enum.to_list()
+  end
+
+  defp get_consecutive_elems(strarr, n, k) do
+    strarr
+    |> Enum.drop(n)
+    |> Enum.take(k)
   end
 end
