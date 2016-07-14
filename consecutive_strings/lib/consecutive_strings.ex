@@ -6,7 +6,15 @@ defmodule Longestconsec do
     |> Enum.max_by(&(String.length(&1)))
   end
 
-  defp consecutives(strarr, k) when length(strarr) == 0 do
+  defp consecutives(strarr, _) when length(strarr) == 0 do
+    [[""]]
+  end
+
+  defp consecutives(_, k) when k < 1 do
+    [[""]]
+  end
+
+  defp consecutives(strarr, k) when k > length(strarr) do
     [[""]]
   end
 
