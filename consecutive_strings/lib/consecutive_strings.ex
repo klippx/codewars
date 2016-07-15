@@ -1,6 +1,6 @@
 defmodule Longestconsec do
 
-  def longest_consec(strarr, _) when length(strarr) == 0, do: ""
+  def longest_consec([], _), do: ""
   def longest_consec(_, k) when k < 1, do: ""
   def longest_consec(strarr, k) when k > length(strarr), do: ""
   def longest_consec(strarr, k) do
