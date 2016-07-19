@@ -2,7 +2,7 @@ defmodule Piapprox do
 
   def iter_pi(epsilon) do
     Enum.reduce_while(leibniz_stream, 0, fn {i, n}, acc ->
-      if abs(:math.pi - acc) >= epsilon, do: {:cont, acc + i}, else: {:halt, [n, Float.round(acc, 10)]}
+      if abs(:math.pi - acc) >= epsilon, do: {:cont, acc + i}, else: {:halt, [n, Float.floor(acc, 10)]}
     end)
   end
 
