@@ -1,0 +1,2 @@
+defmodule Collatz do
+end
