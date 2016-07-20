@@ -1,5 +1,7 @@
 defmodule PalindromicPrimes do
-  def palprimes(n) when is_integer(n) do
+
+  def palprimes(n) do
+    Prime.take(n)
   end
 
 end

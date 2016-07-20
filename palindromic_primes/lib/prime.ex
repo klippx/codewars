@@ -13,7 +13,7 @@ defmodule Prime do
   defp next_prime(primes) when is_list primes do
     List.first(primes) + 1
     |> Stream.iterate(&(&1+1))
-    |> Stream.drop_while(&(not_palindrome?(&1) || is_divisible?(&1, primes)))
+    |> Stream.drop_while(&(is_divisible?(&1, primes)))
     |> Enum.take(1)
     |> List.first
   end
@@ -22,10 +22,5 @@ defmodule Prime do
     Enum.any?(primes, fn prime ->
       rem(number, prime) == 0
     end)
-  end
-
-  defp not_palindrome?(number) when is_integer number do
-    string = Integer.to_string(number)
-    string != String.reverse(string)
   end
 end
