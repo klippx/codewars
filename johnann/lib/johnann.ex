@@ -23,10 +23,10 @@ defmodule Johnann do
   end
 
   def sum_john(n) when n >= 1 do
-    # your code
+    john(n) |> Enum.sum
   end
   def sum_ann(n) when n >= 1 do
-    # your code
+    ann(n) |> Enum.sum
   end
 
 end
