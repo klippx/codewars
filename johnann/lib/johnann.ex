@@ -36,9 +36,11 @@ defmodule Johnann do
   end
 
   def sum_john(n) when n >= 1 do
+    IO.puts("sum_john(#{n})")
     john(n) |> Enum.sum
   end
   def sum_ann(n) when n >= 1 do
+    IO.puts("sum_ann(#{n})")
     ann(n) |> Enum.sum
   end
 

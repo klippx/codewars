@@ -3,7 +3,7 @@ defmodule JohnannTest do
   use ExUnit.Case
 
   defp testJohn(numtest, n, ans) do
-    IO.puts("Johnann.john/1 test ##{numtest} \n")
+    IO.puts("Johnann.john/1 test ##{numtest}\n")
     assert Johnann.john(n) == ans
   end
   test "john" do
@@ -16,7 +16,7 @@ defmodule JohnannTest do
   end
 
   defp testAnn(numtest, n, ans) do
-    IO.puts("Johnann.ann/1 test ##{numtest} \n")
+    IO.puts("Johnann.ann/1 test ##{numtest}\n")
     assert Johnann.ann(n) == ans
   end
   test "ann" do
@@ -33,10 +33,15 @@ defmodule JohnannTest do
   test "sum_ann" do
     testSumAnn(1, 115, 4070)
     testSumAnn(2, 150, 6930)
+    testSumAnn(3, 112, 3860)
+    testSumAnn(4, 83, 2118)
+    testSumAnn(5, 59, 1069)
+    testSumAnn(6, 1000, 308834)
+    testSumAnn(7, 10000, 30899800)
   end
 
   defp testSumJohn(numtest, n, ans) do
-    IO.puts("Johnann.sum_john/1 test ##{numtest} \n")
+    IO.puts("Johnann.sum_john/1 test ##{numtest}\n")
     assert Johnann.sum_john(n) == ans
   end
   test "sum_john" do
