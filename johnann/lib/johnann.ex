@@ -5,9 +5,11 @@ defmodule Johnann do
     john(n-1) ++ [pjohn(n-1)]
   end
 
-  def ann(n) when n == 0, do: []
   def ann(n) when n >= 1 do
-    ann(n-1) ++ [pann(n-1)]
+    Stream.unfold(0, fn
+      ^n -> nil
+       n -> {pann(n), n+1}
+    end) |> Enum.to_list
   end
 
   defp pjohn(n) when n == 0, do: 0
