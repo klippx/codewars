@@ -20,8 +20,19 @@ defmodule Johnann do
 
   defp pann(n) when n == 0, do: 1
   defp pann(n) when n >= 1 do
-    t = pann(n-1)
-    n - pjohn(t)
+    name = "pann/#{n}"
+    case :ets.info(:ann_table) do
+      :undefined -> {:initalize, :ets.new(:ann_table, [:named_table])}
+      table -> {:ok, table}
+    end
+    case :ets.lookup(:ann_table, name) do
+      [{^name, value}] -> value
+      [] ->
+        t = pann(n-1)
+        value = n - pjohn(t)
+        :ets.insert(:ann_table, {name, value})
+        value
+    end
   end
 
   def sum_john(n) when n >= 1 do
