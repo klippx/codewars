@@ -1,10 +1,12 @@
 defmodule PalindromicPrimes do
 
-  def palprimes(n) do
-    stream |> Enum.take(n)
+  def nth(n) do
+    stream
+    |> Enum.take(n)
+    |> List.last
   end
 
-  defp stream do
+  def stream do
     Stream.unfold([], &(find_next_pal_prime(&1)))
   end
 
