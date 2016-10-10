@@ -13,8 +13,10 @@ defmodule Lcm do
   end
 
   defp find_mgn(lst, div, acc) do
-    if Enum.any?(lst, &(&1 != 1)) do
-      if Enum.any?(lst, &(rem(&1, div) == 0)) do
+    if Enum.all?(lst, &(&1 == 1)) do
+      acc
+    else
+      if Enum.any?(lst, fn(x) -> rem(x, div) == 0 end) do
         divide_all_evenly(lst, div)
         |> find_mgn(div, acc*div)
       else
@@ -23,8 +25,6 @@ defmodule Lcm do
           _ -> find_mgn(lst, div+2, acc)
         end
       end
-    else
-      acc
     end
   end
 
