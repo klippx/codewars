@@ -49,14 +49,8 @@ defmodule Sumfracts do
       iex> Sumfracts.simplify({13,12})
       {13, 12}
 
-      iex> Sumfracts.simplify({33152, 16770})
-      {16576, 8385}
-
-      iex> Sumfracts.simplify({45885, 34060})
-      {9177, 6812}
-
   """
-  def simplify({a,b}) when rem(a, b) == 0, do: div(a,b)
+  def simplify({a,b}) when rem(a,b) == 0, do: div(a,b)
   def simplify({a,b}) when rem(a,2) == 0 and rem(b,2) == 0, do: simplify({div(a,2), div(b,2)})
   def simplify({a,b}) when rem(a,5) == 0 and rem(b,5) == 0, do: simplify({div(a,5), div(b,5)})
   def simplify({a,b}), do: {a,b}
