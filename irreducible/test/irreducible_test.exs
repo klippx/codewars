@@ -1,6 +1,7 @@
 defmodule SumfractsTest do
 
   use ExUnit.Case
+  doctest Sumfracts
 
   defp testing(numtest, u, ans) do
     IO.puts("Test #{numtest}")
