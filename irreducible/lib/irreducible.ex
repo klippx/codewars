@@ -1,5 +1,6 @@
 defmodule Sumfracts do
 
+  def sum_fracts([]), do: nil
   def sum_fracts(lst) do
     mgn = mgn(lst)
     lst

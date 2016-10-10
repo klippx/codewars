@@ -10,6 +10,7 @@ defmodule SumfractsTest do
   test "sum_fracts" do
     testing(1, [{1, 2}, {1, 3}, {1, 4}], {13, 12})
     testing(2, [{1, 3}, {5, 3}], 2)
+    testing(3, [], nil)
   end
 
 end
