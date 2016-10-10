@@ -5,12 +5,16 @@ defmodule Sumfracts do
     # Enum.map(lst, fn {a,b} -> "{#{a}, #{b}}" end)
     # |> Enum.join(", ")
     # |> IO.puts
-    mgn = mgn(lst)
+    mgn = lst
+    |> denoms
+    |> Lcm.mgn
+
     lst
     |> convert(mgn)
     |> sum(mgn)
     |> simplify
   end
+  defp denoms(lst), do: lst |> Enum.map(fn {_,b} -> b end)
 
   @doc """
   Convert the list to be on common denominator
@@ -57,25 +61,4 @@ defmodule Sumfracts do
   def simplify({a,b}) when rem(a,5) == 0 and rem(b,5) == 0, do: simplify({div(a,5), div(b,5)})
   def simplify({a,b}), do: {a,b}
 
-  @doc """
-  Finds the smallest common denominator for a list of fractions
-
-  ## Examples
-
-      iex> Sumfracts.mgn([{1, 2}, {1, 3}, {1, 4}])
-      12
-
-  """
-  def mgn(lst) do
-    find_mgn(denoms(lst), denoms(lst) |> Enum.max, denoms(lst) |> Enum.max)
-  end
-  defp denoms(lst), do: lst |> Enum.map(fn {_,b} -> b end)
-  defp find_mgn(denoms, inc, curr) do
-    if found?(denoms, curr) do
-      curr
-    else
-      find_mgn(denoms, inc, curr + inc)
-    end
-  end
-  defp found?(denoms, curr), do: Enum.all?(denoms, fn x -> rem(curr, x) == 0 end)
 end
