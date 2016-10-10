@@ -9,28 +9,32 @@ defmodule Lcm do
 
   """
   def mgn(lst) do
-    find(lst, 2, 1)
+    find_mgn(lst, 2, 1)
   end
 
-  defp find(lst, curr, acc) do
-    if Enum.all?(lst, fn(x) -> x == 1 end) do
-      acc
-    else
-      if Enum.any?(lst, fn(x) -> rem(x, curr) == 0 end) do
-        find(Enum.map(lst, fn(x) ->
-          if rem(x, curr) == 0 do
-            div(x, curr)
-          else
-            x
-          end
-        end), curr, acc*curr)
+  defp find_mgn(lst, div, acc) do
+    if Enum.any?(lst, &(&1 != 1)) do
+      if Enum.any?(lst, &(rem(&1, div) == 0)) do
+        divide_all_evenly(lst, div)
+        |> find_mgn(div, acc*div)
       else
-        if (curr == 2) do
-          find(lst, curr+1, acc)
-        else
-          find(lst, curr+2, acc)
+        case div do
+          2 -> find_mgn(lst, 3, acc)
+          _ -> find_mgn(lst, div+2, acc)
         end
       end
+    else
+      acc
     end
+  end
+
+  defp divide_all_evenly(lst, curr) do
+    Enum.map(lst, fn(x) ->
+      if rem(x, curr) == 0 do
+        div(x, curr)
+      else
+        x
+      end
+    end)
   end
 end
