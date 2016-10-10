@@ -2,6 +2,9 @@ defmodule Sumfracts do
 
   def sum_fracts([]), do: nil
   def sum_fracts(lst) do
+    # Enum.map(lst, fn {a,b} -> "{#{a}, #{b}}" end)
+    # |> Enum.join(", ")
+    # |> IO.puts
     mgn = mgn(lst)
     lst
     |> convert(mgn)
@@ -18,7 +21,7 @@ defmodule Sumfracts do
       [{6, 12}, {4, 12}, {3, 12}]
 
   """
-  def convert(lst, mgn), do: Enum.map(lst, fn {a,b} -> {a*div(mgn, b), b*div(mgn, b)} end)
+  def convert(lst, mgn), do: Enum.map(lst, fn {a,b} -> n=div(mgn, b); {a*n, b*n} end)
 
   @doc """
   Sums the numerators and denominators and returns the result.
@@ -64,16 +67,15 @@ defmodule Sumfracts do
 
   """
   def mgn(lst) do
-    denoms = lst |> Enum.map(fn {_,b} -> b end)
-    greatest = denoms |> Enum.max
-    find_mgn(denoms, greatest, greatest)
+    find_mgn(denoms(lst), denoms(lst) |> Enum.max, denoms(lst) |> Enum.max)
   end
-
-  defp find_mgn(denoms, greatest, current) do
-    if Enum.all?(denoms, fn x -> rem(current, x) == 0 end) do
-      current
+  defp denoms(lst), do: lst |> Enum.map(fn {_,b} -> b end)
+  defp find_mgn(denoms, inc, curr) do
+    if found?(denoms, curr) do
+      curr
     else
-      find_mgn(denoms, greatest, current + greatest)
+      find_mgn(denoms, inc, curr + inc)
     end
   end
+  defp found?(denoms, curr), do: Enum.all?(denoms, fn x -> rem(curr, x) == 0 end)
 end
